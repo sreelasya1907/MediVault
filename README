@@ -1,0 +1,40 @@
+MediVault: Emergency Medical ID System
+MediVault is a rapid-response medical information system designed to provide first responders with life-saving data during the "Golden Hour" of an emergency. By scanning a unique QR code, medical professionals can instantly access a patient's vital stats without needing to unlock their phone.
+
+The Problem
+In emergencies, patients are often unconscious or unable to communicate. First responders waste critical minutes searching for medical history, allergies, or emergency contacts.
+
+Our Solution
+Instant Access: A secure QR code (on a lock screen or keychain) links directly to a cloud-hosted medical profile.
+
+Real-time Database: Built with Firebase Firestore for instant data retrieval.
+
+Zero App Install: Works via any mobile browser—no app download required for the responder.
+
+Technology Stack
+Frontend: HTML5, CSS3 (Responsive Design)
+
+Backend: Firebase Firestore (NoSQL Database)
+
+Logic: JavaScript (ES6)
+
+Tools: Python (Segno library) for QR Code Generation
+
+Hosting: GitHub Pages
+
+The Team
+Pooja: Lead UI/UX Designer & Frontend Developer.
+
+Reshma: Backend Engineer & Firebase Integration Specialist.
+
+Lasya: DevOps, Deployment, & Python Tooling.
+
+How it Works
+Registration: The user enters their name, blood group, and emergency contact.
+
+Cloud Storage: Data is securely saved to Firebase, and a unique Document ID is generated.
+
+QR Generation: Our Python script converts the unique URL into a QR code.
+
+Emergency Scan: A responder scans the code to view the Emergency Profile.
+
