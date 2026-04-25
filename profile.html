@@ -3,49 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EMERGENCY MEDICAL ID</title>
+    <title>MediVault - Emergency Profile</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body class="bg-gray-100 font-sans">
 
-    <div class="bg-red-600 p-6 text-white text-center shadow-lg">
-        <h1 class="text-3xl font-black tracking-widest">MEDICAL EMERGENCY</h1>
-        <p class="text-sm opacity-90 mt-1">Scan Result: MediVault ID Verified</p>
+    <div class="bg-red-600 text-white text-center py-6 shadow-lg">
+        <h1 class="text-3xl font-bold tracking-widest uppercase">Medical Emergency</h1>
+        <p class="text-sm mt-1 opacity-90">Scan Result: MediVault ID Verified</p>
     </div>
 
-    <div class="p-4 max-w-md mx-auto">
+    <div class="max-w-md mx-auto mt-8 p-6">
         <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
-            
-            <div class="bg-red-50 p-6 border-b border-red-100 text-center">
-                <span class="text-gray-500 uppercase text-xs font-bold">Blood Group</span>
-                <h2 id="displayBlood" class="text-6xl font-bold text-red-600">--</h2>
+            <div class="bg-red-50 p-6 text-center border-b border-red-100">
+                <p class="text-gray-500 uppercase text-xs font-bold tracking-widest mb-1">Blood Group</p>
+                <div id="displayBlood" class="text-5xl font-black text-red-600">--</div>
             </div>
 
-            <div class="p-6 space-y-6">
+            <div class="p-8 space-y-6">
                 <div>
-                    <label class="text-gray-400 text-xs uppercase font-bold">Patient Name</label>
-                    <p id="displayName" class="text-xl font-semibold text-gray-800">Loading...</p>
+                    <p class="text-gray-400 text-xs font-bold uppercase tracking-wider">Patient Name</p>
+                    <h2 id="displayName" class="text-2xl font-bold text-gray-800">Loading...</h2>
                 </div>
 
                 <div>
-                    <label class="text-gray-400 text-xs uppercase font-bold">Known Allergies / Conditions</label>
-                    <p id="displayAllergies" class="text-lg text-gray-700 bg-yellow-50 p-2 rounded border border-yellow-100">
+                    <p class="text-gray-400 text-xs font-bold uppercase tracking-wider">Known Allergies / Conditions</p>
+                    <div id="displayAllergies" class="mt-2 p-3 bg-yellow-50 border border-yellow-100 rounded-lg text-gray-700 italic">
                         Fetching data...
-                    </p>
+                    </div>
                 </div>
 
-                <div class="pt-4">
-                    <a id="callLink" href="#" class="block w-full bg-green-600 hover:bg-green-700 text-white text-center py-4 rounded-xl font-bold text-xl shadow-lg transition-transform active:scale-95">
-                        📞 CALL EMERGENCY CONTACT
-                    </a>
-                </div>
+                <a id="callLink" href="#" class="flex items-center justify-center w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl transition-all shadow-lg text-lg">
+                    📞 CALL EMERGENCY CONTACT
+                </a>
             </div>
         </div>
 
-        <p class="text-center text-gray-400 text-xs mt-6 uppercase tracking-widest">
-            Powered by MediVault 2026
-        </p>
+        <p class="text-center text-gray-400 text-xs mt-8 uppercase tracking-widest">Powered by MediVault 2026</p>
     </div>
 
+    <script>
+        // 1. YOUR FIREBASE CONFIG (Reshma, make sure this matches your Firebase project!)
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
+        // 2. THE LOADING FIX
+        async function loadPatientData() {
+            // Get the ID from the URL (e.g., ?id=123)
+            const urlParams = new URLSearchParams(window.location.search);
+            const userId = urlParams.get('id');
+
+            if (!userId) {
+                document.getElementById('displayName').innerText = "No ID Provided";
+                return;
+            }
+
+            try {
+                // Look for the document in the 'users' collection
+                const doc = await db.collection("users").doc(userId).get();
+
+                if (doc.exists) {
+                    const data = doc.data();
+                    
+                    // Match the data fields to your Firebase labels
+                    document.getElementById('displayName').innerText = data.fullName || data.name || "N/A";
+                    document.getElementById('displayBlood').innerText = data.bloodGroup || "--";
+                    document.getElementById('displayAllergies').innerText = data.allergies || "None Reported";
+                    
+                    // Update the phone button link
+                    if (data.emergencyContact) {
+                        document.getElementById('callLink').href = "tel:" + data.emergencyContact;
+                    }
+                } else {
+                    document.getElementById('displayName').innerText = "Patient Not Found";
+                    document.getElementById('displayAllergies').innerText = "The ID in the QR code does not match our records.";
+                }
+            } catch (error) {
+                console.error("Firebase Error:", error);
+                document.getElementById('displayName').innerText = "System Error";
+            }
+        }
+
+        // Run the function as soon as the page loads
+        window.onload = loadPatientData;
+    </script>
 </body>
 </html>
