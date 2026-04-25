@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMERGENCY MEDICAL ID</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+    <div class="bg-red-600 p-6 text-white text-center shadow-lg">
+        <h1 class="text-3xl font-black tracking-widest">MEDICAL EMERGENCY</h1>
+        <p class="text-sm opacity-90 mt-1">Scan Result: MediVault ID Verified</p>
+    </div>
+
+    <div class="p-4 max-w-md mx-auto">
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            
+            <div class="bg-red-50 p-6 border-b border-red-100 text-center">
+                <span class="text-gray-500 uppercase text-xs font-bold">Blood Group</span>
+                <h2 id="displayBlood" class="text-6xl font-bold text-red-600">--</h2>
+            </div>
+
+            <div class="p-6 space-y-6">
+                <div>
+                    <label class="text-gray-400 text-xs uppercase font-bold">Patient Name</label>
+                    <p id="displayName" class="text-xl font-semibold text-gray-800">Loading...</p>
+                </div>
+
+                <div>
+                    <label class="text-gray-400 text-xs uppercase font-bold">Known Allergies / Conditions</label>
+                    <p id="displayAllergies" class="text-lg text-gray-700 bg-yellow-50 p-2 rounded border border-yellow-100">
+                        Fetching data...
+                    </p>
+                </div>
+
+                <div class="pt-4">
+                    <a id="callLink" href="#" class="block w-full bg-green-600 hover:bg-green-700 text-white text-center py-4 rounded-xl font-bold text-xl shadow-lg transition-transform active:scale-95">
+                        📞 CALL EMERGENCY CONTACT
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <p class="text-center text-gray-400 text-xs mt-6 uppercase tracking-widest">
+            Powered by MediVault 2026
+        </p>
+    </div>
+
+</body>
+</html>

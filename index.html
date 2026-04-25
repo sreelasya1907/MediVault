@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediVault - Register</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
+        <h1 class="text-2xl font-bold text-blue-600 mb-2">MediVault</h1>
+        <p class="text-gray-500 mb-6">Create your life-saving medical ID.</p>
+
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Full Name</label>
+                <input type="text" id="userName" class="w-full border p-2 rounded-lg mt-1" placeholder="John Doe">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Blood Group</label>
+                <select id="userBlood" class="w-full border p-2 rounded-lg mt-1">
+                    <option>A+</option><option>A-</option><option>B+</option>
+                    <option>B-</option><option>O+</option><option>O-</option>
+                    <option>AB+</option><option>AB-</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Emergency Contact Number</label>
+                <input type="tel" id="userPhone" class="w-full border p-2 rounded-lg mt-1" placeholder="9876543210">
+            </div>
+
+            <button onclick="saveToFirebase()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition">
+                Generate My Secure ID
+            </button>
+        </div>
+    </div>
+
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+<script>
+  
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB65NZX6xwwyY4SosFm2WmTf20XU1GhoSY",
+  authDomain: "medivault-53661.firebaseapp.com",
+  projectId: "medivault-53661",
+  storageBucket: "medivault-53661.firebasestorage.app",
+  messagingSenderId: "822609817285",
+  appId: "1:822609817285:web:55e336ec04a30775534aac"
+};
+
+
+
+  // 1. Initialize Firebase (This "wakes up" the connection)
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  // 2. The Save Function
+  async function saveToFirebase() {
+    // A. Grab the values from Pooja's HTML boxes using their IDs
+    const nameInput = document.getElementById('userName').value;
+    const bloodInput = document.getElementById('userBlood').value;
+    const phoneInput = document.getElementById('userPhone').value;
+
+    // B. Validation: Make sure the boxes aren't empty
+    if (!nameInput || !phoneInput) {
+      alert("Please fill in the Name and Phone number!");
+      return;
+    }
+
+    try {
+      // C. Send the data to a collection named "users"
+      const docRef = await db.collection("users").add({
+        fullName: nameInput,
+        bloodGroup: bloodInput,
+        emergencyContact: phoneInput,
+        timestamp: new Date() // Records when they signed up
+      });
+
+      // D. Success! Show the ID that Lasya needs
+      console.log("Saved to Firebase with ID:", docRef.id);
+      alert("Success! Give this ID to Lasya: " + docRef.id);
+      
+    } catch (error) {
+      // E. Error handling: In case the internet is down
+      console.error("Error saving data: ", error);
+      alert("Error: " + error.message);
+    }
+  }
+</script>
+
+  
+</body>
+</html>
